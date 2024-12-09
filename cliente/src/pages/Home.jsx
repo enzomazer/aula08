@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"; 
+import { useEffect, useState } from "react";
 import { Button } from '@mui/material'
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
@@ -19,20 +19,20 @@ export default function Home() {
     buscarUsuario();
   }, [])
   const removerPessoa = async (id) => {
-    try{
-      await fetch("http://localhost:3000/usuarios"+ id, {
+    try {
+      await fetch("http://localhost:3000/usuarios" + id, {
         method: "DELETE"
       })
-    }catch{
+    } catch {
       alert("ops")
     }
   }
 
   const exportarPDF = () => {
     const doc = new jsPDF();
-    const tabela = usuarios.map( usuario => [
-        usuario.nome,
-        usuario.email
+    const tabela = usuarios.map(usuario => [
+      usuario.nome,
+      usuario.email
     ]);
     doc.text("Lista de Usuários", 10, 10)
     doc.autoTable({
