@@ -6,9 +6,10 @@ export default function Home() {
 
   const [usuarios, setUsuarios] = useState([]);
 
-  useEffect(() => {
+  const atualizar = async () => {
     const buscarUsuario = async () => {
       try {
+        console.log("o gustavo ta te esperando, claudia!!")
         const resposta = await fetch("http://localhost:3000/usuarios");
         const dados = await resposta.json();
         setUsuarios(dados);
@@ -17,14 +18,25 @@ export default function Home() {
       }
     }
     buscarUsuario();
-  }, [])
+}
+
+useEffect(() => {
+  atualizar()
+}, [])
+
+
   const removerPessoa = async (id) => {
     try {
-      await fetch("http://localhost:3000/usuarios" + id, {
+      console.log("claudia o gustavo te ama")
+      await fetch("http://localhost:3000/usuarios/" + id, {
         method: "DELETE"
-      })
-    } catch {
-      alert("ops")
+      }
+    )
+    atualizar()
+    console.log("claudia volta pro gustavo")
+    }
+    catch {
+      alert('DAD');
     }
   }
 
@@ -56,7 +68,7 @@ export default function Home() {
         <tr key={usuario.id}>
           <td>{usuario.nome}</td>
           <td>{usuario.email}</td>
-          <td><button onClick={() => removerPessoa(usuario.id)}></button></td>
+          <td><button onClick={() => removerPessoa(usuario.id)}>remover</button></td>
         </tr>
       )}
     </table>

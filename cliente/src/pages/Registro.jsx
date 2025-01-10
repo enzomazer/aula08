@@ -17,7 +17,6 @@ export default function Registrar() {
           email: email
         })
       })
-
       if (resposta.ok) {
         navigation("/")
       }
