@@ -5,82 +5,110 @@ const cors = require('cors');
 app.use(express.json());
 app.use(cors());
 
-let usuarios = [
-    { id: 1, nome: "Alice", email: "alice@example.com" },
-    { id: 2, nome: "Bruno", email: "bruno@example.com" },
-    { id: 3, nome: "Carla", email: "carla@example.com" },
-    { id: 4, nome: "Daniel", email: "daniel@example.com" },
-    { id: 5, nome: "Eduarda", email: "eduarda@example.com" },
-    { id: 6, nome: "Felipe", email: "felipe@example.com" },
-    { id: 7, nome: "Gabriela", email: "gabriela@example.com" },
-    { id: 8, nome: "Henrique", email: "henrique@example.com" },
-    { id: 9, nome: "Isabela", email: "isabela@example.com" },
-    { id: 10, nome: "João", email: "joao@example.com" },
-    { id: 11, nome: "Karen", email: "karen@example.com" },
-    { id: 12, nome: "Leonardo", email: "leonardo@example.com" },
-    { id: 13, nome: "Mariana", email: "mariana@example.com" },
-    { id: 14, nome: "Natália", email: "natalia@example.com" },
-    { id: 15, nome: "Otávio", email: "otavio@example.com" },
-    { id: 16, nome: "Paula", email: "paula@example.com" },
-    { id: 17, nome: "Rafael", email: "rafael@example.com" },
-    { id: 18, nome: "Sabrina", email: "sabrina@example.com" },
-    { id: 19, nome: "Thiago", email: "thiago@example.com" },
-    { id: 20, nome: "Vanessa", email: "vanessa@example.com" },
+let musicas = [
+    {
+      id: 1,
+      titulo: "Bohemian Rhapsody",
+      artista: "Queen",
+      album: "A Night at the Opera",
+      duracao: "5:55",
+      genero: "Rock"
+    },
+    {
+      id: 2,
+      titulo: "Blinding Lights",
+      artista: "The Weeknd",
+      album: "After Hours",
+      duracao: "3:20",
+      genero: "Synth-pop"
+    },
+    {
+      id: 3,
+      titulo: "Shape of You",
+      artista: "Ed Sheeran",
+      album: "÷ (Divide)",
+      duracao: "3:53",
+      genero: "Pop"
+    },
+    {
+      id: 4,
+      titulo: "Smells Like Teen Spirit",
+      artista: "Nirvana",
+      album: "Nevermind",
+      duracao: "5:01",
+      genero: "Grunge"
+    },
+    {
+      id: 5,
+      titulo: "Rolling in the Deep",
+      artista: "Adele",
+      album: "21",
+      duracao: "3:48",
+      genero: "Soul"
+    },
+    {
+      id: 6,
+      titulo: "Hotel California",
+      artista: "Eagles",
+      album: "Hotel California",
+      duracao: "6:30",
+      genero: "Rock"
+    }
   ];
 
-app.post('/usuarios', (req, res) => {
-    const { nome, email } = req.body;
+app.post('/musicas', (req, res) => {
+    const { titulo, artista } = req.body;
     
-    if (!nome || !email) {
+    if (!titulo || !artista) {
         return res.status(400).json({ erro: 'Nome e email são obrigatórios' });
     }
 
-    const novoUsuario = { id: usuarios.length + 1, nome, email };
-    usuarios.push(novoUsuario);
+    const novoUsuario = { id: musicas.length + 1, titulo, artista };
+    musicas.push(novoUsuario);
     
     res.status(201).json(novoUsuario);
 });
 
-app.get('/usuarios', (req, res) => {
-    res.status(200).json(usuarios);
+app.get('/musicas', (req, res) => {
+    res.status(200).json(musicas);
 });
 
-app.get('/usuarios/:id', (req, res) => {
+app.get('/musicas/:id', (req, res) => {
     const { id } = req.params;
-    const usuario = usuarios.find(u => u.id === parseInt(id));
+    const musica = musicas.find(u => u.id === parseInt(id));
     
-    if (!usuario) {
+    if (!musica) {
         return res.status(404).json({ erro: 'Usuário não encontrado' });
     }
     
-    res.status(200).json(usuario);
+    res.status(200).json(musica);
 });
 
-app.put('/usuarios/:id', (req, res) => {
+app.put('/musicas/:id', (req, res) => {
     const { id } = req.params;
-    const { nome, email } = req.body;
+    const { titulo, artista } = req.body;
     
-    const usuario = usuarios.find(u => u.id === parseInt(id));
+    const musica = musicas.find(u => u.id === parseInt(id));
     
-    if (!usuario) {
+    if (!musica) {
         return res.status(404).json({ erro: 'Usuário não encontrado' });
     }
     
-    usuario.nome = nome || usuario.nome;
-    usuario.email = email || usuario.email;
+    musica.titulo = titulo || musica.titulo;
+    musica.artista = artista || musica.artista;
     
-    res.status(200).json(usuario);
+    res.status(200).json(musica);
 });
 
-app.delete('/usuarios/:id', (req, res) => {
+app.delete('/musicas/:id', (req, res) => {
     const { id } = req.params;
-    const index = usuarios.findIndex(u => u.id === parseInt(id));
+    const index = musicas.findIndex(u => u.id === parseInt(id));
     
     if (index === -1) {
         return res.status(404).json({ erro: 'Usuário não encontrado' });
     }
     
-    usuarios.splice(index, 1);
+    musicas.splice(index, 1);
     res.status(204).send();
 });
 

@@ -2,22 +2,23 @@ import { useEffect, useState } from "react";
 import { Button } from '@mui/material'
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
+import { Link } from "react-router-dom";
+
 export default function Home() {
 
-  const [usuarios, setUsuarios] = useState([]);
+  const [musicas, setMusicas] = useState([]);
 
   const atualizar = async () => {
-    const buscarUsuario = async () => {
+    const buscarMusica = async () => {
       try {
-        console.log("o gustavo ta te esperando, claudia!!")
-        const resposta = await fetch("http://localhost:3000/usuarios");
+        const resposta = await fetch("http://localhost:3000/musicas");
         const dados = await resposta.json();
-        setUsuarios(dados);
+        setMusicas(dados);
       } catch {
         alert('Ocorreu um erro no app!');
       }
     }
-    buscarUsuario();
+    buscarMusica();
 }
 
 useEffect(() => {
@@ -25,15 +26,14 @@ useEffect(() => {
 }, [])
 
 
-  const removerPessoa = async (id) => {
+  const removerMusica = async (id) => {
     try {
       console.log("claudia o gustavo te ama")
-      await fetch("http://localhost:3000/usuarios/" + id, {
+      await fetch("http://localhost:3000/musicas/" + id, {
         method: "DELETE"
       }
     )
     atualizar()
-    console.log("claudia volta pro gustavo")
     }
     catch {
       alert('DAD');
@@ -42,35 +42,58 @@ useEffect(() => {
 
   const exportarPDF = () => {
     const doc = new jsPDF();
-    const tabela = usuarios.map(usuario => [
-      usuario.nome,
-      usuario.email
+    const tabela = musicas.map(musica => [
+      musica.titulo,
+      musica.artista
     ]);
-    doc.text("Lista de Usuários", 10, 10)
+    doc.text("Lista de Musicas", 10, 10)
     doc.autoTable({
-      head: [["nome", "email"]],
+      head: [["titulo", "artista"]],
       body: tabela
     })
 
     doc.save("alunos.pdf");
   }
+ 
+  const orderAz = () => {
+    const listaOrdenada = [...musicas].sort((a , b) => a.titulo.localeCompare(b.titulo))
+    setMusicas(listaOrdenada)
+  }
+
 
   return (
-    <table>
-      <Button variant="contained" onClick={() => exportarPDF()}>
-        nil
-      </Button>
-      <tr>
-        <td>Nome</td>
-        <td>E-mail</td>
-      </tr>
-      {usuarios.map((usuario) =>
-        <tr key={usuario.id}>
-          <td>{usuario.nome}</td>
-          <td>{usuario.email}</td>
-          <td><button onClick={() => removerPessoa(usuario.id)}>remover</button></td>
-        </tr>
-      )}
-    </table>
+    <div>
+      <div>
+        <Button variant="contained" onClick={() => exportarPDF()}>
+          nil
+        </Button>
+        <Button onClick={() => orderAz()}>
+          AZ
+        </Button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {musicas.map((musica) => (
+            <tr key={musica.id}>
+              <td>{musica.titulo}</td>
+              <td>{musica.artista}</td>
+              <td>
+                <button onClick={() => removerMusica(musica.id)}>Remover</button>
+                <Link to={`/alterar/${musica.id}`}>
+                  <button>Alterar</button>
+                </Link>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
