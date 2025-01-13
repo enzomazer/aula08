@@ -56,17 +56,23 @@ let musicas = [
     }
   ];
 
+  function corrigirid() {
+    let idd = 1
+    for (let musica of musicas) {
+      musica.id = idd
+      idd = idd + 1
+    }
+  }
+
 app.post('/musicas', (req, res) => {
     const { titulo, artista } = req.body;
-    
     if (!titulo || !artista) {
         return res.status(400).json({ erro: 'Nome e email são obrigatórios' });
     }
-
-    const novoUsuario = { id: musicas.length + 1, titulo, artista };
-    musicas.push(novoUsuario);
-    
-    res.status(201).json(novoUsuario);
+    const novaMusica = { id: musicas.length + 1, titulo, artista };
+    musicas.push(novaMusica);
+    corrigirid()
+    res.status(201).json(novaMusica);
 });
 
 app.get('/musicas', (req, res) => {
@@ -85,19 +91,18 @@ app.get('/musicas/:id', (req, res) => {
 });
 
 app.put('/musicas/:id', (req, res) => {
-    const { id } = req.params;
-    const { titulo, artista } = req.body;
-    
-    const musica = musicas.find(u => u.id === parseInt(id));
-    
-    if (!musica) {
-        return res.status(404).json({ erro: 'Usuário não encontrado' });
+    const {id, titulo, artista } = req.body;
+    if (!titulo || !artista) {
+      res.json({ erro: 'alteracao vazio' });
+      return;
+  }
+    for (let mus of musicas) {
+      if (mus.id == id) {
+        mus.titulo = titulo
+        mus.artista = artista
+      }
     }
-    
-    musica.titulo = titulo || musica.titulo;
-    musica.artista = artista || musica.artista;
-    
-    res.status(200).json(musica);
+    res.status(200).json({ erro: 'wdihawpdhawdpoih' });
 });
 
 app.delete('/musicas/:id', (req, res) => {
@@ -109,6 +114,7 @@ app.delete('/musicas/:id', (req, res) => {
     }
     
     musicas.splice(index, 1);
+    corrigirid()
     res.status(204).send();
 });
 

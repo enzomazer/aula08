@@ -28,7 +28,6 @@ useEffect(() => {
 
   const removerMusica = async (id) => {
     try {
-      console.log("claudia o gustavo te ama")
       await fetch("http://localhost:3000/musicas/" + id, {
         method: "DELETE"
       }
@@ -75,6 +74,7 @@ useEffect(() => {
         <thead>
           <tr>
             <th>Nome</th>
+            <th>Nome</th>
             <th>E-mail</th>
             <th>Ações</th>
           </tr>
@@ -82,14 +82,15 @@ useEffect(() => {
         <tbody>
           {musicas.map((musica) => (
             <tr key={musica.id}>
+              <td>{musica.id}</td>
               <td>{musica.titulo}</td>
               <td>{musica.artista}</td>
               <td>
                 <button onClick={() => removerMusica(musica.id)}>Remover</button>
-                <Link to={`/alterar/${musica.id}`}>
+                <Link to={`/alterar/${musica.id}`}                                                                                                      >
                   <button>Alterar</button>
                 </Link>
-              </td>
+              </td> 
             </tr>
           ))}
         </tbody>
