@@ -5,6 +5,7 @@ import "../style/alterar.css";
 
 export default function Alterar() {
   const [musica, setMusica] = useState({
+    id: "", 
     titulo: "",
     artista: "",
     album: "",
@@ -13,6 +14,7 @@ export default function Alterar() {
     lancamento: "",
     gravadora: "",
   });
+
   const navigation = useNavigate();
   const { id } = useParams();
 
@@ -22,7 +24,7 @@ export default function Alterar() {
         const resposta = await fetch(`http://localhost:3000/musicas/${id}`);
         if (resposta.ok) {
           const data = await resposta.json();
-          setMusica(data);
+          setMusica(data); 
         }
       } catch {
         alert("Erro ao buscar dados da música.");
@@ -36,7 +38,7 @@ export default function Alterar() {
     event.preventDefault();
 
     try {
-      const resposta = await fetch(`http://localhost:3000/musicas/${id}`, {
+      const resposta = await fetch(`http://localhost:3000/musicas/${musica.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(musica),
@@ -63,21 +65,28 @@ export default function Alterar() {
             </tr>
           </thead>
           <tbody>
-            {Object.keys(musica).map((key) => (
-              <tr key={key}>
-                <td>{key.charAt(0).toUpperCase() + key.slice(1)}</td>
-                <td>{musica[key]}</td>
-                <td>
-                  <input
-                    type="text"
-                    value={musica[key]}
-                    onChange={(e) =>
-                      setMusica({ ...musica, [key]: e.target.value })
-                    }
-                  />
-                </td>
-              </tr>
-            ))}
+            <tr>
+              <td><strong>ID</strong></td>
+              <td colSpan="2">{musica.id}</td>
+            </tr>
+
+            {Object.entries(musica)
+              .filter(([key]) => key !== "id")
+              .map(([key, value]) => (
+                <tr key={key}>
+                  <td>{key.charAt(0).toUpperCase() + key.slice(1)}</td>
+                  <td>{value}</td>
+                  <td>
+                    <input
+                      type="text"
+                      value={value}
+                      onChange={(e) =>
+                        setMusica({ ...musica, [key]: e.target.value })
+                      }
+                    />
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
         <div className="button-container">
